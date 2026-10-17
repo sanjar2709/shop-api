@@ -53,6 +53,7 @@ CUSTOM_APPS = [
     'apps.users',
     'apps.catalog',
     'apps.cart',
+    'apps.orders',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
