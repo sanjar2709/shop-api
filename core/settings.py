@@ -45,7 +45,7 @@ THIRD_PARTY_APPS = [
 ]
 
 CUSTOM_APPS = [
-
+    'apps.users',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
@@ -78,6 +78,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+
+AUTH_USER_MODEL = 'users.User'
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
