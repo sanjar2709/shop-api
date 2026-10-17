@@ -2,6 +2,10 @@
 DJANGO_SETTINGS_MODULE = 'core.settings'
 python_files = ['test_*.py']
 addopts = '--reuse-db --strict-markers'
+filterwarnings = [
+    # whitenoise complains when collectstatic was not run, which is fine in tests
+    'ignore:No directory at:UserWarning',
+]
 
 [tool.coverage.run]
 source = ['apps']
