@@ -7,6 +7,7 @@ from apps.cart.models import CartItem
 from apps.catalog.models import Product
 
 from .models import Order, OrderItem
+from .tasks import send_order_email
 
 # Which status can follow which. Anything else is rejected.
 ALLOWED_TRANSITIONS = {
@@ -62,6 +63,9 @@ def create_order(user, *, shipping_address, phone, comment=''):
     order.save(update_fields=('total_price', 'updated_at'))
 
     CartItem.objects.filter(cart__user=user).delete()
+
+    # Send the email only after the order is really saved
+    transaction.on_commit(lambda: send_order_email.delay(order.pk, order.status))
     return order
 
 
@@ -81,4 +85,6 @@ def change_status(order, new_status):
 
     order.status = new_status
     order.save(update_fields=('status', 'updated_at'))
+
+    transaction.on_commit(lambda: send_order_email.delay(order.pk, new_status))
     return order

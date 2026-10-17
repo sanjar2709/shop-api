@@ -178,3 +178,23 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Shop API <noreply@example.com>')
+
+# Celery
+
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6380/0')
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_ALWAYS_EAGER = os.getenv('CELERY_TASK_ALWAYS_EAGER') == '1'
+
+CELERY_BEAT_SCHEDULE = {
+    'cancel-unpaid-orders': {
+        'task': 'apps.orders.tasks.cancel_unpaid_orders',
+        'schedule': 300,  # every 5 minutes
+    },
+}
+
+# Orders
+
+ORDER_PAYMENT_TIMEOUT_MINUTES = int(os.getenv('ORDER_PAYMENT_TIMEOUT_MINUTES', 30))
