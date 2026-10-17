@@ -7,16 +7,16 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'date_joined']
-        read_only_fields = ['id', 'email', 'date_joined']
+        fields = ('id', 'email', 'first_name', 'last_name', 'phone', 'date_joined')
+        read_only_fields = ('id', 'email', 'date_joined')
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, validators=[validate_password])
+    password = serializers.CharField(write_only=True, validators=(validate_password,))
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'password', 'first_name', 'last_name', 'phone']
+        fields = ('id', 'email', 'password', 'first_name', 'last_name', 'phone')
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)

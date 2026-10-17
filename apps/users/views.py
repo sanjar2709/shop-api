@@ -5,13 +5,13 @@ from .serializers import RegisterSerializer, UserSerializer
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
-    permission_classes = [permissions.AllowAny]
-    authentication_classes = []
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
 
 
 class MeView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
-    http_method_names = ['get', 'patch']
+    http_method_names = ('get', 'patch')
 
     def get_object(self):
         return self.request.user

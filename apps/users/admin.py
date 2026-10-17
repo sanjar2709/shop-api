@@ -6,10 +6,10 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    ordering = ['-date_joined']
-    list_display = ['email', 'first_name', 'last_name', 'is_staff', 'is_active', 'date_joined']
-    list_filter = ['is_staff', 'is_superuser', 'is_active']
-    search_fields = ['email', 'first_name', 'last_name', 'phone']
+    ordering = ('-date_joined',)
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active', 'date_joined')
+    list_filter = ('is_staff', 'is_superuser', 'is_active')
+    search_fields = ('email', 'first_name', 'last_name', 'phone')
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
