@@ -9,6 +9,8 @@ def _test_settings(settings):
     settings.CELERY_TASK_ALWAYS_EAGER = True
     settings.CELERY_TASK_EAGER_PROPAGATES = True
     settings.PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
+    # The test client talks plain HTTP, so don't redirect it to HTTPS when CI runs with DEBUG=0
+    settings.SECURE_SSL_REDIRECT = False
 
 
 @pytest.fixture

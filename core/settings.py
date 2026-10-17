@@ -13,6 +13,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -25,11 +26,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
+if not SECRET_KEY:
+    raise ImproperlyConfigured('SECRET_KEY environment variable is not set')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == '1'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split()
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
+
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split()
 
 # Application definition
 
@@ -210,3 +215,15 @@ CELERY_BEAT_SCHEDULE = {
 # Orders
 
 ORDER_PAYMENT_TIMEOUT_MINUTES = int(os.getenv('ORDER_PAYMENT_TIMEOUT_MINUTES', 30))
+
+# Security
+# Turned on automatically in production (DEBUG=0). The app is expected to run behind
+# a reverse proxy (nginx) that terminates HTTPS and sets X-Forwarded-Proto.
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', '1') == '1'
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', 60 * 60 * 24 * 30))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
