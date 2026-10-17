@@ -43,7 +43,8 @@ class AddCartItemSerializer(serializers.Serializer):
         item = cart.items.filter(product=product).first()
         total = attrs['quantity'] + (item.quantity if item else 0)
         if total > product.stock:
-            raise serializers.ValidationError({'quantity': _('Only %(stock)s left in stock.') % {'stock': product.stock}})
+            message = _('Only %(stock)s left in stock.') % {'stock': product.stock}
+            raise serializers.ValidationError({'quantity': message})
         return attrs
 
     def save(self):
@@ -68,5 +69,6 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
         if value < 1:
             raise serializers.ValidationError(_('Quantity must be at least 1.'))
         if value > self.instance.product.stock:
-            raise serializers.ValidationError(_('Only %(stock)s left in stock.') % {'stock': self.instance.product.stock})
+            stock = self.instance.product.stock
+            raise serializers.ValidationError(_('Only %(stock)s left in stock.') % {'stock': stock})
         return value

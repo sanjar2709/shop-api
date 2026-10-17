@@ -6,3 +6,15 @@ addopts = '--reuse-db --strict-markers'
 [tool.coverage.run]
 source = ['apps']
 omit = ['*/migrations/*', '*/tests/*']
+
+[tool.ruff]
+line-length = 120
+target-version = 'py312'
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+select = ['E', 'W', 'F', 'I', 'B', 'UP', 'DJ', 'SIM']
+
+[tool.ruff.lint.isort]
+known-first-party = ['apps', 'core']
+
